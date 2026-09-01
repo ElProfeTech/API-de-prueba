@@ -1,0 +1,35 @@
+services:
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_api
+    restart: always
+
+    environment:
+     MYSQL_ROOT_PASSWORD: root123
+     MYSQL_DATABASE: prueba
+    
+
+    ports:
+     - "3306:3306"
+
+    volumes:
+     - mysql_data:/var/lib/mysql
+     - ./init:/docker-entrypoint-initdb.d
+
+  api:
+   build: .
+   container_name: express_api
+   restart: always  
+
+   ports:
+    - "3000:3000" 
+
+   env_file:
+    - .env
+
+   depends_on:
+    - mysql
+
+volumes:
+ mysql_data:     
